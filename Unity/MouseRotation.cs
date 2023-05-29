@@ -4,15 +4,19 @@ using UnityEngine;
 
 public class Mouse
 {
-    public Rigibody mainBigBox;
-    private Transform objectTransform;
+    private Rigidbody mainBigBox;
+    private Transform mainTransform;
     private readonly float forwardSpeed = 1000.0f;
     private readonly float rotationSpeed = 5.0f;
 
-    public void Init()
+    public void Init(Rigidbody main
+                    , Transform objectTransform
+                        , GameObject gameObject)
     {
-        KinematicOff();
         gameObject.SetActive(true);
+        mainTransform = objectTransform;
+        mainBigBox = main;
+        KinematicOff();
     }
     public void KinematicOff()
     {
@@ -31,12 +35,12 @@ public class Mouse
     }
     public void RotateObject(float[] mouseXY)
     {
-        objectTransform.rotation *= Quaternion.Euler(0, mouseXY[0] * -1, 0);
-        objectTransform.rotation *= Quaternion.Euler(mouseXY[1] , 0, 0);
+        mainTransform.rotation *= Quaternion.Euler(0, mouseXY[0] * -1, 0);
+        mainTransform.rotation *= Quaternion.Euler(mouseXY[1], 0, 0);
     }
     public void ObjectAddForce()
     {
-        mainBigBox.AddForce(objectTransform.forward * forwardSpeed);
+        mainBigBox.AddForce(mainTransform.forward * forwardSpeed);
 
     }
     public void RigiObj()
@@ -50,7 +54,7 @@ public class Mouse
     }
     public void FollowMouse()
     {
-         if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0))
         {
             Debug.Log("Down");
         }
@@ -61,7 +65,7 @@ public class Mouse
             RotaObj();
         }
 
-        if (Input.GetMouseButtonUp(0) )
+        if (Input.GetMouseButtonUp(0))
         {
             Debug.Log("Up");
             RigiObj();
@@ -69,18 +73,20 @@ public class Mouse
     }
 }
 
-public class Logic : MonoBehaviour
+public class Mousec : MonoBehaviour
 {
-    public Mouse Mouse = new Mouse();
+    public Mouse Mouse = new();
+    public Rigidbody mainBigBox;
 
-    private void Start()
+    void Start()
     {
-        Mouse.Init();
+        Mouse.Init(mainBigBox
+                    , GetComponent<Transform>()
+                        , gameObject);
     }
 
-    private void Update()
+    void Update()
     {
         Mouse.FollowMouse();
     }
-
 }
