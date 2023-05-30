@@ -1,68 +1,58 @@
-using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine;
 
-public class CardManager : MonoBehaviour
+
+public class Shuffle
 {
-    public GameObject cardPrefab;   // 牌的預製體，可以在Unity編輯器中指定
-    public Sprite cardBack;         // 牌的背面圖片，可以在Unity編輯器中指定
-    public List<Sprite> cardFaces;  // 牌的正面圖片列表，可以在Unity編輯器中指定
-
-    private List<GameObject> cards = new List<GameObject>(); // 牌的列表
-
-    private void Start()
+    private GameObject cardContainer;
+    private SpriteRenderer[] cardRenderers;
+    public void Init(GameObject container, SpriteRenderer[] renderers)
     {
-        ShuffleCards(); // 遊戲開始時洗牌
+        cardContainer = container;
+        cardRenderers = renderers;
+        GetCardRenderers();
     }
-
-    private void CreateCards()
+    public void ClickMouse()
     {
-        // 創建52張牌的遊戲物體
-        for (int i = 0; i < 52; i++)
+        if (Input.GetMouseButtonDown(0))
         {
-            GameObject card = Instantiate(cardPrefab, transform);
-            card.GetComponent<Card>().SetCardImages(cardBack, cardFaces[i]);
-            cards.Add(card);
+            Debug.Log("Mouse Left Button");
+            ShuffleCards();
         }
     }
-    private void ShuffleMode()
+    private void GetCardRenderers()
     {
-        // 洗牌算法
-        for (int i = 0; i < cards.Count; i++)
-        {
-            GameObject temp = cards[i];
-            int randomIndex = Random.Range(i, cards.Count);
-            cards[i] = cards[randomIndex];
-            cards[randomIndex] = temp;
-        }
-
+        cardRenderers = cardContainer.GetComponentsInChildren<SpriteRenderer>();
     }
 
-    private void ViewCards()
+    private void ShuffleCards()
     {
-
-        for (int i = 0; i < cards.Count; i++)
+        System.Random random = new();
+        for (int i = cardRenderers.Length - 1; i > 0; i--)
         {
-            cards[i].transform.position = new Vector3(i * 2.0f, 0f, 0f);
+            int j = random.Next(i + 1);
+            Sprite temp = cardRenderers[i].sprite;
+            cardRenderers[i].sprite = cardRenderers[j].sprite;
+            cardRenderers[j].sprite = temp;
         }
     }
 
+}
 
-    public void ShuffleCards()
+public class ShuffleLogic : MonoBehaviour
+{
+    readonly Shuffle shuffle = new();
+    public GameObject container; 
+    private readonly SpriteRenderer[] renderers; 
+
+    void Start()
     {
-        CreateCards(); // 創建牌
-
-        ShuffleMode(); // 洗牌模型
-
-        ViewCards(); // 更新牌的位置
-
+        shuffle.Init(container, renderers);
     }
 
-    public void FlipCards()
+    void Update()
     {
-        foreach (GameObject card in cards)
-        {
-            card.GetComponent<Card>().Flip();
-        }
+        shuffle.ClickMouse();
     }
 }
