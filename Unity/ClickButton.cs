@@ -49,7 +49,7 @@ public class ButtonData
 }
 
 
-public class GameLog_01 : MonoBehaviour
+public class ButtonLogic : MonoBehaviour
 {
     public ButtonData buttonData;
 
