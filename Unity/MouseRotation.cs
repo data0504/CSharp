@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Mouse
+public class MousecData
 {
     private Rigidbody mainBigBox;
     private Transform mainTransform;
@@ -75,18 +75,18 @@ public class Mouse
 
 public class Mousec : MonoBehaviour
 {
-    public Mouse Mouse = new();
+    public MousecData mousecData = new();
     public Rigidbody mainBigBox;
 
     void Start()
     {
-        Mouse.Init(mainBigBox
+        mousecData.Init(mainBigBox
                     , GetComponent<Transform>()
                         , gameObject);
     }
 
     void Update()
     {
-        Mouse.FollowMouse();
+        mousecData.FollowMouse();
     }
 }
