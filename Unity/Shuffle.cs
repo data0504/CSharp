@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public class Shuffle
+public class ShuffleData
 {
     private GameObject cardContainer;
     private SpriteRenderer[] cardRenderers;
@@ -40,19 +40,19 @@ public class Shuffle
 
 }
 
-public class ShuffleLogic : MonoBehaviour
+public class Shuffle : MonoBehaviour
 {
-    readonly Shuffle shuffle = new();
+    readonly ShuffleData shuffleData = new();
     public GameObject container; 
     private readonly SpriteRenderer[] renderers; 
 
     void Start()
     {
-        shuffle.Init(container, renderers);
+        shuffleData.Init(container, renderers);
     }
 
     void Update()
     {
-        shuffle.ClickMouse();
+        shuffleData.ClickMouse();
     }
 }
